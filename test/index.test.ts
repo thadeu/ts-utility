@@ -1,0 +1,117 @@
+import { describe, it, expect } from 'vitest'
+import { Try } from '../src'
+
+class User {
+  static async all() {
+    return [{ id: 1 }, { id: 2 }]
+  }
+
+  static async throwed() {
+    throw new Error(`User not found`)
+  }
+}
+
+describe('Try', () => {
+  it('sync single value', () => {
+    let value = Try(1)
+
+    expect(value).toBe(1)
+  })
+
+  it('case value is async', async () => {
+    let promise = () => JSON.parse('{')
+    let value = await Try(promise, { max: 5, onError: {} })
+
+    expect(value).toEqual({})
+  })
+
+  it('case value isnt async', async () => {
+    let promise = () => JSON.parse('{')
+    let value = Try(promise, { onError: {} })
+
+    expect(value).toEqual({})
+  })
+
+  it('case value isnt function', async () => {
+    let value = await Try(_ => JSON.parse('{'), { onError: {} })
+
+    expect(value).toEqual({})
+  })
+
+  it('case exponential configured', async () => {
+    let result = await Try(_ => JSON.parse('{'), { onError: {}, max: 1, exponential: 1.6 })
+
+    expect(result).toEqual({})
+  })
+
+  it('onRetry', async () => {
+    let counter = 0
+
+    await Try(_ => JSON.parse('{'), { max: 3, onError: {}, onRetry: (count, isReached) => (counter = count) })
+
+    expect(counter).toEqual(3)
+  })
+
+  it('case success #1', async () => {
+    let counter = 0
+
+    let tryOptions = { max: 3, onError: {}, onRetry: count => (counter = count) }
+    let result = await Try(_ => JSON.parse('{ "user": "1" }'), tryOptions)
+
+    expect(counter).toEqual(0)
+    expect(result).toEqual({ user: '1' })
+  })
+
+  it('case success #2', () => {
+    let tryOptions = { max: 1, onError: {} }
+    let result = Try(_ => JSON.parse('{ "user": "1" }'), tryOptions)
+
+    expect(result).toEqual({ user: '1' })
+  })
+
+  it('case success #2', () => {
+    let tryOptions = { max: 1, onError: {} }
+    let result = Try(_ => JSON.parse('{ "user": "1" }'), tryOptions)
+
+    expect(result).toEqual({ user: '1' })
+  })
+
+  it('case success #2', async () => {
+    let tryOptions = {
+      onError: error => {
+        // console.log(error)
+        return []
+      },
+    }
+
+    let result = await Try(_ => User.all(), tryOptions)
+
+    expect(result).toEqual([{ id: 1 }, { id: 2 }])
+  })
+
+  it('case fail with throw', async () => {
+    let tryOptions = {
+      onError: async error => {
+        // console.log(error)
+        return []
+      },
+    }
+
+    let result = await Try(async () => User.throwed(), tryOptions)
+
+    expect(result).toEqual([])
+  })
+
+  it('case fail with throw', async () => {
+    let tryOptions = {
+      onError: async error => {
+        // console.log(error)
+        return []
+      },
+    }
+
+    let result = await Try(User.throwed, tryOptions)
+
+    expect(result).toEqual([])
+  })
+})

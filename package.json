@@ -1,0 +1,42 @@
+{
+  "name": "ts-utility",
+  "description": "A simple and lightweight way to create a safe result in Typescript",
+  "version": "1.0.0",
+  "author": "Thadeu Esteves<tadeuu@gmail.com>",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/index.umd.js",
+  "repository": {
+    "url": "https://github.com/thadeu/ts-utility"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "metaprogramming",
+    "typescript",
+    "try",
+    "try catch",
+    "try/catch",
+    "result object",
+    "functional progamming",
+    "monad"
+  ],
+  "scripts": {
+    "test:run": "npx vitest run",
+    "test:watch": "npx vitest --watch",
+    "build": "rm -rf dist && microbundle src/index.ts"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.2.7",
+    "@types/node": "^18.15.11",
+    "lodash": "^4.17.21",
+    "microbundle": "^0.15.1",
+    "typescript": "4.6",
+    "vite": "^4.3.7",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.31.0"
+  }
+}
