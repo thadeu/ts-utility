@@ -3,7 +3,7 @@
   <p align="center"><i>A simple and lightweight way to create a safe result in Typescript</i></p>
 </p>
 
-<span style="display: flex; align-items: center; gap:5px; justify-content: center;">
+<p align="center">
   <a style="width: auto;" href="https://github.com/thadeu/ts-utility/actions/workflows/ci.yml">
     <img alt="Build Status" src="https://github.com/thadeu/ts-utility/actions/workflows/ci.yml/badge.svg">
   </a>
