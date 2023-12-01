@@ -1,7 +1,4 @@
-import { isFunction } from 'lodash'
-
-export { isFunction }
-
+export const isFunction = fn => fn?.constructor?.name === 'Function'
 export const isAsyncFunction = fn => fn?.constructor?.name === 'AsyncFunction'
 
 export const execute = (o, params = null) => {
