@@ -3,11 +3,11 @@
   <p align="center"><i>A simple and lightweight way to create a safe result in Typescript</i></p>
 </p>
 
-<p align="center">
-  <a href="https://github.com/thadeu/ts-utility/actions/workflows/ci.yml">
-    <img alt="Build Status" src="https://github.com/thadeu/ts-utility/actions/workflows/ci.yml/badge.svg">
-  </a>
-</p>
+<div align="center">
+  <img alt="Build Status" src="https://github.com/thadeu/ts-utility/actions/workflows/ci.yml/badge.svg">
+
+  <img alt="GitHub package.json version (subfolder of monorepo)" src="https://img.shields.io/github/package-json/v/thadeu/ts-utility">
+</div>
 
 
 ## Motivation
