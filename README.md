@@ -80,7 +80,7 @@ class User {
 Now, look it.
 
 ```ts
-import { Try } from 'ts-utility'
+import { Try } from '@thadeu/ts-utility'
 ```
 
 > When success, you receive promise resolved.
