@@ -1,5 +1,5 @@
 {
-  "name": "ts-utility",
+  "name": "@thadeu/ts-utility",
   "description": "A simple and lightweight way to create a safe result in Typescript",
   "version": "1.0.0",
   "author": "Thadeu Esteves<tadeuu@gmail.com>",

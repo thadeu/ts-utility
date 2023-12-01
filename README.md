@@ -38,19 +38,25 @@ unreleased | https://github.com/thadeu/ts-utility/blob/main/README.md
 Use Yarn
 
 ```bash
-yarn add ts-utility
+yarn add @thadeu/ts-utility
 ```
 
 or use NPM
 
 ```bash
-npm i ts-utility
+npm i @thadeu/ts-utility
 ```
 
 or use PNPM
 
 ```bash
-pnpm add ts-utility
+pnpm add @thadeu/ts-utility
+```
+
+or use Github directly
+
+```bash
+pnpm add github:thadeu/ts-utility
 ```
 
 and then, enjoy!
