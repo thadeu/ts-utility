@@ -1,6 +1,8 @@
 import { TryException } from '@/Exception'
 import { execute, delay, race, isFunction, isAsyncFunction } from '@/Util'
 
+export { delay, race, isAsyncFunction, isFunction }
+
 interface TryOptions {
   max?: number
   exponential?: number
