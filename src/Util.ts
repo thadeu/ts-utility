@@ -1,5 +1,7 @@
 export const isFunction = fn => fn?.constructor?.name === 'Function'
 export const isAsyncFunction = fn => fn?.constructor?.name === 'AsyncFunction'
+export const isPlainRegex = input => input.constructor?.name === 'RegExp'
+export const isPlainString = input => typeof input === 'string' && input.trim()
 
 export const execute = (o, params = null) => {
   if (isAsyncFunction(o)) {

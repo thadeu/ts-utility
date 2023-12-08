@@ -1,7 +1,7 @@
 import { TryException } from '@/Exception'
-import { execute, delay, race, isFunction, isAsyncFunction } from '@/Util'
+import { execute, delay, race, isFunction, isAsyncFunction, isPlainString, isPlainRegex } from '@/Util'
 
-export { delay, race, isAsyncFunction, isFunction }
+export { delay, race, isAsyncFunction, isFunction, isPlainString, isPlainRegex }
 
 interface TryOptions {
   max?: number

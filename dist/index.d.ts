@@ -1,5 +1,5 @@
-import { delay, race, isFunction, isAsyncFunction } from '@/Util';
-export { delay, race, isAsyncFunction, isFunction };
+import { delay, race, isFunction, isAsyncFunction, isPlainString, isPlainRegex } from '@/Util';
+export { delay, race, isAsyncFunction, isFunction, isPlainString, isPlainRegex };
 interface TryOptions {
     max?: number;
     exponential?: number;
