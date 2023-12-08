@@ -1,7 +1,7 @@
 import { TryException } from '@/Exception'
 import { execute, delay, race, isFunction, isAsyncFunction, isPlainString, isPlainRegex } from '@/Util'
 
-export { delay, race, isAsyncFunction, isFunction, isPlainString, isPlainRegex }
+export { delay, race, isAsyncFunction, isFunction, isPlainString, isPlainRegex, execute as Execute }
 
 interface TryOptions {
   max?: number
