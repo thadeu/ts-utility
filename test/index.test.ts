@@ -114,4 +114,22 @@ describe('Try', () => {
 
     expect(result).toEqual([])
   })
+
+  it('execute eval code', async () => {
+    let tryOptions = {
+      onError: async error => {
+        return []
+      },
+    }
+
+    const code = eval(`
+      () => {
+        return Number(1)
+      }
+    `)
+
+    let result = await Try(code, tryOptions)
+
+    expect(result).toEqual(1)
+  })
 })
