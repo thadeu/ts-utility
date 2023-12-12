@@ -7,6 +7,7 @@ interface TryOptions {
     strict?: boolean;
     timeout?: number;
     onError?: any;
+    async?: boolean;
     onRetry?: (count: number, isReached: boolean) => void;
 }
 export declare function Try(callable: any, options?: TryOptions): any;
