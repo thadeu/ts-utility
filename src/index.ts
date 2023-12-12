@@ -10,15 +10,17 @@ interface TryOptions {
   strict?: boolean
   timeout?: number
   onError?: any
+  async?: boolean
   onRetry?: (count: number, isReached: boolean) => void
 }
 
 export function Try(callable: any, options?: TryOptions) {
   const max = options?.max ?? 0
+  const isAsync = options?.async ?? isAsyncFunction(callable)
   let count = options?.count ?? 0
 
   try {
-    if (isAsyncFunction(callable)) {
+    if (isAsync) {
       return race(options?.timeout ?? 9_999, execute(callable)).catch(e => {
         if (count >= max) {
           return execute(options?.onError, e)

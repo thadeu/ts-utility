@@ -25,6 +25,12 @@ describe('Try', () => {
     expect(value).toEqual({})
   })
 
+  it('case value is async flag', async () => {
+    let value = await Try(() => JSON.parse('{ "a": 1 }'), { async: true, onError: {} })
+
+    expect(value).toEqual({ a: 1 })
+  })
+
   it('case value isnt async', async () => {
     let promise = () => JSON.parse('{')
     let value = Try(promise, { onError: {} })
