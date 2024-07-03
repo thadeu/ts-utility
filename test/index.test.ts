@@ -140,12 +140,15 @@ describe('Try', () => {
   })
 
   it('resolved promise', async () => {
+    let retries = 0
+
     let tryOptions = {
-      max: 3,
-      timeout: 5_000,
+      max: 2,
+      timeout: 1_000,
       exponential: 1.5,
-      onRetry: (count, isReached) => [count, isReached],
-      onError: (err) => err
+      onRetry: (count, isReached) => {
+        retries = count
+      }
     }
 
     let adapter = {
@@ -161,6 +164,8 @@ describe('Try', () => {
     }
 
     let result = await Try(promise, tryOptions)
-    console.log(result)
+
+    expect(retries).toEqual(2)
+    expect(result).toEqual({ statusCode: 429 })
   })
 })
