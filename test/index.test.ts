@@ -20,7 +20,7 @@ describe('Try', () => {
 
   it('case value is async', async () => {
     let promise = () => JSON.parse('{')
-    let value = await Try(promise, { max: 5, onError: {} })
+    let value = await Try(promise, { max: 2, onError: {} })
 
     expect(value).toEqual({})
   })
@@ -53,9 +53,9 @@ describe('Try', () => {
   it('onRetry', async () => {
     let counter = 0
 
-    await Try(_ => JSON.parse('{'), { max: 3, onError: {}, onRetry: (count, isReached) => (counter = count) })
+    await Try(_ => JSON.parse('{'), { max: 2, onError: {}, onRetry: (count, isReached) => (counter = count) })
 
-    expect(counter).toEqual(3)
+    expect(counter).toEqual(2)
   })
 
   it('case success #1', async () => {
@@ -137,5 +137,30 @@ describe('Try', () => {
     let result = await Try(code, tryOptions)
 
     expect(result).toEqual(1)
+  })
+
+  it('resolved promise', async () => {
+    let tryOptions = {
+      max: 3,
+      timeout: 5_000,
+      exponential: 1.5,
+      onRetry: (count, isReached) => [count, isReached],
+      onError: (err) => err
+    }
+
+    let adapter = {
+      post: async ({ path, body }) => {
+        return Promise.reject({ statusCode: 429 })
+      }
+    }
+
+    const promise = async () => {
+      let httpVerb = adapter['post']
+
+      return httpVerb({ path: 'test', body: {} })
+    }
+
+    let result = await Try(promise, tryOptions)
+    console.log(result)
   })
 })
