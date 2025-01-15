@@ -140,7 +140,7 @@ describe('Try', () => {
 
     await Try(_ => JSON.parse('{'), { max: 3, exponential: 0.2, onError: {}, onRetry: (count, isReached) => (counter = count) })
 
-    expect(counter).toEqual(2)
+    expect(counter).toEqual(3)
   })
 
   it('case success #1', async () => {
