@@ -5,6 +5,7 @@ export default ({ mode }) => {
   return defineConfig({
     test: {
       testTimeout: 30000,
+      singleThread: false
     },
     plugins: [tsconfigPaths()],
   })

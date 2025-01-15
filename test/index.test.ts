@@ -140,7 +140,7 @@ describe('Try', () => {
 
     await Try(_ => JSON.parse('{'), { max: 3, exponential: 0.2, onError: {}, onRetry: (count, isReached) => (counter = count) })
 
-    expect(counter).toEqual(3)
+    expect(counter).toEqual(2)
   })
 
   it('case success #1', async () => {
@@ -222,5 +222,35 @@ describe('Try', () => {
     let result = await Try(code, tryOptions)
 
     expect(result).toEqual(1)
+  })
+
+  it('resolved promise', async () => {
+    let retries = 0
+
+    let tryOptions = {
+      max: 2,
+      timeout: 1_000,
+      exponential: 1.5,
+      onRetry: (count, isReached) => {
+        retries = count
+      }
+    }
+
+    let adapter = {
+      post: async ({ path, body }) => {
+        return Promise.reject({ statusCode: 429 })
+      }
+    }
+
+    const promise = async () => {
+      let httpVerb = adapter['post']
+
+      return httpVerb({ path: 'test', body: {} })
+    }
+
+    let result = await Try(promise, tryOptions)
+
+    expect(retries).toEqual(2)
+    expect(result).toEqual({ statusCode: 429 })
   })
 })

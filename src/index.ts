@@ -81,12 +81,19 @@ export function Try(callable: any, options?: TryOptions) {
     if (isAsync) {
       return race(options?.timeout ?? 9_999, execute(callable)).catch(e => {
         if (count >= max) {
-          return execute(options?.onError, e)
+          return options?.onError ? execute(options?.onError, e) : e
         }
-
+        
         count++
-
+        
         if (options?.onRetry) options.onRetry(count, count >= max)
+          
+          if (max > 0) {
+          return (async function () {
+            await delay((count ** (options?.exponential ?? 0.5)) * 1_000)
+            return Try(callable, { ...options, count })
+          })()
+        }
 
         return Try(callable, { ...options, count })
       })
@@ -112,7 +119,7 @@ export function Try(callable: any, options?: TryOptions) {
 
     if (max > 0) {
       return (async function () {
-        await delay(count ** (options?.exponential ?? 1.5) * 1_000)
+        await delay((count ** (options?.exponential ?? 0.5)) * 1_000)
         return Try(callable, { ...options, count })
       })()
     }
