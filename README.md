@@ -83,6 +83,44 @@ Now, look it.
 import { Try } from '@thadeu/ts-utility'
 ```
 
+or 
+
+```ts
+import { safeTry } from '@thadeu/ts-utility'
+```
+
+The difference between them, is that safeTry always returns a tupple [error, value]. Look at this.
+
+```ts
+type Data = {
+  data: {
+    user: {
+      name: string
+    }
+  }
+}
+
+const obj = { data: { user: { name: 'Thadeu' } } }
+const fn = () => JSON.parse(JSON.stringify(obj))
+const [error, value] = safeTry<Error, Data>(fn)
+
+expect(error).toBeNull()
+expect(value).toEqual(obj)
+expect(obj.data.user.name).toEqual('Thadeu')
+```
+
+And when we have an async function, like this:
+
+```ts
+const obj = { data: { user: { name: 'Thadeu' } } }
+
+const promise = obj => async () => JSON.parse(JSON.stringify(obj))
+const [error, value] = await safeTry(promise(obj))
+
+expect(error).toBeNull()
+expect(value).toEqual(obj)
+```
+
 > When success, you receive promise resolved.
 
 ```ts
