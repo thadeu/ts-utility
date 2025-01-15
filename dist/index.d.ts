@@ -10,4 +10,5 @@ interface TryOptions {
     async?: boolean;
     onRetry?: (count: number, isReached: boolean) => void;
 }
+export declare function safeTry<E = Error, T = any>(callable: any, options?: TryOptions): [E, T] | any;
 export declare function Try(callable: any, options?: TryOptions): any;
