@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Try } from '../src'
+import { Try, safeTry } from '../src'
 
 class User {
   static async all() {
@@ -11,6 +11,91 @@ class User {
   }
 }
 
+describe('safeTry', () => {
+  describe('success #1', () => {
+    it('case value is sync', async () => {
+      type Data = {
+        data: {
+          user: {
+            name: string
+          }
+        }
+      }
+
+      const obj = { data: { user: { name: 'Thadeu' } } }
+      const fn = () => JSON.parse(JSON.stringify(obj))
+      const [error, value] = safeTry<Error, Data>(fn)
+
+      expect(error).toBeNull()
+      expect(value).toEqual(obj)
+      expect(obj.data.user.name).toEqual('Thadeu')
+    })
+
+    it('case value is async', async () => {
+      const obj = { data: { user: { name: 'Thadeu' } } }
+
+      const promise = obj => async () => JSON.parse(JSON.stringify(obj))
+      const [error, value] = await safeTry(promise(obj))
+
+      expect(error).toBeNull()
+      expect(value).toEqual(obj)
+    })
+  })
+
+  describe('fail', () => {
+    it('case value is sync', () => {
+      const fn = () => JSON.parse('{')
+
+      const opts = {
+        onError: error => {
+          if (error.name == 'SyntaxError') return 'fallback'
+
+          return error
+        },
+      }
+
+      const [error, value] = safeTry<Error, null>(fn, opts)
+
+      expect(error).toEqual('fallback')
+      expect(value).toEqual(null)
+    })
+
+    it('case value is sync', () => {
+      const fn = () => {
+        throw new TypeError()
+      }
+
+      const [error, value]: [Error, any] = safeTry(fn)
+
+      expect(error.name).toEqual('TypeError')
+      expect(value).toEqual(null)
+    })
+
+    it('case value is async', async () => {
+      const fn = async () => {
+        return Promise.reject('deu ruim')
+      }
+
+      const [error, value] = await safeTry(fn)
+
+      expect(error).toEqual('deu ruim')
+      expect(value).toEqual(null)
+    })
+
+    it('case value is async', async () => {
+      const fn = async () => {
+        return Promise.reject(new TypeError('arg is empty'))
+      }
+
+      const [error, value] = await safeTry(fn)
+
+      expect(error.name).toEqual('TypeError')
+      expect(error.message).toEqual('arg is empty')
+      expect(value).toEqual(null)
+    })
+  })
+})
+
 describe('Try', () => {
   it('sync single value', () => {
     let value = Try(1)
@@ -20,7 +105,7 @@ describe('Try', () => {
 
   it('case value is async', async () => {
     let promise = () => JSON.parse('{')
-    let value = await Try(promise, { max: 5, onError: {} })
+    let value = await Try(promise, { max: 2, exponential: 0.1, onError: {} })
 
     expect(value).toEqual({})
   })
@@ -53,7 +138,7 @@ describe('Try', () => {
   it('onRetry', async () => {
     let counter = 0
 
-    await Try(_ => JSON.parse('{'), { max: 3, onError: {}, onRetry: (count, isReached) => (counter = count) })
+    await Try(_ => JSON.parse('{'), { max: 3, exponential: 0.2, onError: {}, onRetry: (count, isReached) => (counter = count) })
 
     expect(counter).toEqual(3)
   })
