@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Try, safeTry } from '../src'
+import { Try, safeTry, safetry } from '../src'
 
 class User {
   static async all() {
@@ -36,6 +36,16 @@ describe('safeTry', () => {
 
       const promise = obj => async () => JSON.parse(JSON.stringify(obj))
       const [error, value] = await safeTry(promise(obj))
+
+      expect(error).toBeNull()
+      expect(value).toEqual(obj)
+    })
+
+    it('case value is async', async () => {
+      const obj = { data: { user: { name: 'Thadeu' } } }
+
+      const promise = obj => async () => JSON.parse(JSON.stringify(obj))
+      const [error, value] = await safetry(promise(obj))
 
       expect(error).toBeNull()
       expect(value).toEqual(obj)

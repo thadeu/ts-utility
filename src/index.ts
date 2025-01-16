@@ -14,6 +14,10 @@ interface TryOptions {
   onRetry?: (count: number, isReached: boolean) => void
 }
 
+export function safetry<E = Error, T = any>(callable: any, options?: TryOptions): [E, T] | any {
+  return safeTry(callable, options)
+}
+
 export function safeTry<E = Error, T = any>(callable: any, options?: TryOptions): [E, T] | any {
   const max = options?.max ?? 0
   const isAsync = options?.async ?? isAsyncFunction(callable)
