@@ -40,7 +40,7 @@ export function safeTry<E = Error, T = any>(callable: any, options?: TryOptions)
 
           if (options?.onRetry) options.onRetry(count, count >= max)
 
-          return Try(callable, { ...options, count })
+          return safeTry(callable, { ...options, count })
         })
     }
 
@@ -68,11 +68,11 @@ export function safeTry<E = Error, T = any>(callable: any, options?: TryOptions)
       return (async function () {
         await delay(count ** (options?.exponential ?? 1.5) * 1_000)
 
-        return Try(callable, { ...options, count })
+        return safeTry(callable, { ...options, count })
       })()
     }
 
-    return Try(callable, { ...options, count })
+    return safeTry(callable, { ...options, count })
   }
 }
 
