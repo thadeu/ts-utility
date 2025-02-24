@@ -11,6 +11,47 @@ class User {
   }
 }
 
+describe('safetry', () => {
+  it('inline function', () => {
+    let Calling = {
+      play() {
+        return 1
+      }
+    }
+
+    const [error, value] = safetry(Calling.play)
+
+    expect(value).toEqual(1)
+    expect(error).toBeNull()
+  })
+
+  it('inline function', () => {
+    let Calling = {
+      play() {
+        return 1
+      }
+    }
+
+    const [error, value] = safetry(_ => Calling.play())
+    
+    expect(value).toEqual(1)
+    expect(error).toBeNull()
+  })
+
+  it('inline function', async () => {
+    let Calling = {
+      async play() {
+        return 2
+      }
+    }
+
+    const [error, value] = await safetry(Calling.play)
+    
+    expect(value).toEqual(2)
+    expect(error).toBeNull()
+  })
+})
+
 describe('safeTry', () => {
   describe('success #1', () => {
     it('case value is sync', async () => {
