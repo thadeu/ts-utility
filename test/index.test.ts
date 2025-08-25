@@ -11,7 +11,53 @@ class User {
   }
 }
 
+const mockNavigator = {
+  userAgent: 'Mozilla/5.0 (Test Environment)',
+  mediaDevices: {
+    getUserMedia: () => Promise.resolve(),
+    enumerateDevices: () => Promise.resolve([]),
+    ondevicechange: async () => {}
+  }
+}
+
+Object.defineProperty(global, 'navigator', {
+  value: mockNavigator,
+  writable: true,
+  enumerable: true,
+  configurable: true
+})
+
 describe('safetry', () => {
+  it('never return not tuple', async () => {
+    global.navigator = {
+      mediaDevices: {
+        getUserMedia: async () => {}
+      }
+    } as any
+
+    async function getUserMediaFn (options) {
+      return new Promise((resolve, reject) => {
+        reject('Teste')
+      })
+    }
+
+    const result = await safetry(() => getUserMediaFn({}), {
+      async: true,
+      exponential: 0.01,
+      timeout: 1,
+      max: 3,
+      onRetry: (times, isReached) => {
+        console.log(`[LOG] @ getMediaStream retry count: ${times}/3`)
+      },
+      onError: (onerr) => {
+        console.error(`[ERROR] @ getMediaStream error: ${onerr.message}`)
+        return null
+      }
+    })
+
+    expect(Array.isArray(result)).toBeTruthy()
+  })
+
   it('inline function', () => {
     let Calling = {
       play() {
